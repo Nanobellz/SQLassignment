@@ -66,7 +66,7 @@ function getContact ($id){
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-	$query = $db->prepare("SELECT * FROM `users` WHERE `id` = ?");
+	$query = $db->prepare("SELECT * FROM `members` WHERE `id` = ?");
 	$query->bind_param('i', $id);
 	$query->execute();
 	//$result = $query->execute();  //doesn't work.  Can't get fetch_assoc() to work with bound parameters
@@ -135,7 +135,7 @@ function getID($email){
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-	$query = $db->prepare("SELECT `id` FROM `members` WHERE `email` = ?")
+	$query = $db->prepare("SELECT `id` FROM `members` WHERE `email` = ?");
 	$query->bind_param('s', $email);
 	$query->execute();
 	$query->bind_result($id);
@@ -374,19 +374,14 @@ function editContact($contact, $validate)
 	        echo ">
 	      </div>          
 	    </div>
-	  </div>";
-	  if ((isset($contact["firstName"]) && empty($contact["firstName"])) || (isset($contact["lastName"]) && empty($contact["lastName"])))
-	    {
-	      echo "<div class = 'span3 offset1 alert alert-error'>The above fields are mandatory.</div>";
-	    }
-	    echo "      
+	  </div>      
 
 	  <div class='control-group' style='margin-bottom:20px'>
 	    <label class='control-label' for='email' style='width:160px; float:left; margin-right: 20px; margin-top:5px; text-align:right'>Email address</label>
 	    <div class='controls' style='margin-left: 180px'>
 	      <div class='input-prepend'>
 	        <span class='add-on'><i class='icon-envelope-alt'";
-	        if (isset($validate['email']) && !$validate['email'])
+	        if ((isset($contact["email"]) && empty($contact["email"])) || (isset($validate['email']) && !$validate['email']))
 	          {
 	            echo"style = 'color:red'";
 	          }
@@ -405,6 +400,12 @@ function editContact($contact, $validate)
 	  {
 	    echo "<div class = 'span3 offset1 alert alert-error'>Not a valid email.</div>";
 	  }
+	  
+	  if ((isset($contact["firstName"]) && empty($contact["firstName"])) || (isset($contact["lastName"]) && empty($contact["lastName"])) || (isset($contact["email"])) && empty($contact["email"]))
+	    {
+	      echo "<div class = 'span3 offset1 alert alert-error'>The above fields are mandatory.</div>";
+	    }
+
 	  echo "
 	  <div class='control-group' style='margin-bottom:20px'>
 	    <label class='control-label' for='webaddr' style='width:160px; float:left; margin-right: 20px; margin-top:5px; text-align:right'>Web Site</label>

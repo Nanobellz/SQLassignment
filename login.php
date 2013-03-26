@@ -8,16 +8,18 @@ include "functions.php";
 //$adminlogin = loadJson("adminpass.txt"); 
 // gets a list of valid usernames and passwords as md5 hashes
 
-if(isset($_POST['usrnme'])){
+if(isset($_POST['email'])){
   //check if credentials are correct
-  $user = md5($_POST['usrnme']);
+  $user = $_POST['email'];
   $pass = md5($_POST['pass']);
   //hashes the inputs so they can be compared to the stored hashes
   if(check_login($user, $pass))
   {
     $_SESSION['logged_in'] = true;
       //$_SESSION['new_create'] = true;
-    $_SESSION['user_n'] = $_POST['usrnme'];
+    $id =  getID($user);
+    $_SESSION['current_user'] = getContact($id);
+    $_SESSION['user_n'] = $_SESSION['current_user']['firstName']. " " . $_SESSION['current_user']['lastName'];
   }
   else
   { //inform user of an error
@@ -30,6 +32,7 @@ else if(isset($_GET['logout']))
 {
   unset($_SESSION['logged_in']);
   unset($_SESSION['user_n']);
+  unset($_SESSION['current_user']);
 }
 
 ?>
@@ -101,10 +104,12 @@ else if(isset($_GET['logout']))
         echo '<span style="color:red;">' . $err .'</span>';
         }
         echo '
-        <input type="text" class="input-small" placeholder="Login" name = "usrnme" value = "admin">
+        <input type="text" class="input-small" placeholder="Email" name = "email" value = "admin">
         <input type="password" class="input-small" placeholder="Password" name = "pass" value = "fnord">
         <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+        <a href="new_contact.php" class="btn btn-large pull-right">Sign up</a>
       </form>
+
 
     </div> <!-- /container -->
   '?>

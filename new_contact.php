@@ -3,16 +3,16 @@
 session_start();
 include "functions.php";
 include "regex_validate.php";
-if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
-{
-  header("Location: login.php");
-  exit();
-}
+//if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
+//{
+//  header("Location: login.php");
+//  exit();
+//}
 ?>
 <!DOCTYPE html>
 <html>
   <head>
-      <title>Create New Contact</title>
+      <title>Create New Account</title>
       <meta name='viewport' content='width=device-width, initial-scale=1.0'>
       <!-- Bootstrap -->
       <link href='css/bootstrap.min.css' rel='stylesheet' media='screen'>
