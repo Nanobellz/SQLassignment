@@ -3,7 +3,7 @@
 
 $db = new mysqli('localhost', 'admin', 'pass', 'assignment2');
 
-function saveJson ($filename, $save_object)
+/*function saveJson ($filename, $save_object)
 {
 	$json_string = json_encode($save_object);
 	$file_write = fopen($filename, "w");
@@ -23,7 +23,7 @@ function loadJson ($filename)
 	fclose($open);
 	$json_object = json_decode($json_string, true);
 	return $json_object;
-}
+}*/
 /*
 function getID ()
 {
@@ -71,13 +71,15 @@ function getContact ($id){
 	$query->execute();
 	//$result = $query->execute();  //doesn't work.  Can't get fetch_assoc() to work with bound parameters
 	//$array = $result->fetch_assoc();
-	$query->bind_result($id, $title, $firstName, $lastName, $email, $webaddr, $home_phone, $work_phone, $mobile_phone, $twitter, $facebook, $image, $comment);
+	$query->bind_result($id, $type, $title, $firstName, $lastName, $email, $password, $webaddr, $home_phone, $work_phone, $mobile_phone, $twitter, $facebook, $image, $comment, $status);
 	while($query->fetch()){
 		$result['id']=$id;
+		$result['type']=$type;
 		$result['title']=$title;
 		$result['firstName']=$firstName;
 		$result['lastName']=$lastName;
 		$result['email']=$email;
+		$result['password']=$password;
 		$result['webaddr']=$webaddr;
 		$result['home_phone']=$home_phone;
 		$result['work_phone']=$work_phone;
@@ -86,19 +88,23 @@ function getContact ($id){
 		$result['facebook']=$facebook;
 		$result['image']=$image;
 		$result['comment']=$comment;
+		$result['status']=$status;
 	}
 	$query->close();
 	return $result;
 }
 
-function check_login($login, $pass){
+function check_login($email, $pass){
    global $db;
+   if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
    $goodLogin = false;
-   $query = $db->prepare("SELECT * FROM `passwords` WHERE `user` = ?");
-   $query->bind_param('s', $login);
+   $query = $db->prepare("SELECT `password` FROM `members` WHERE `email` = ?");
+   $query->bind_param('s', $email);
    $query->execute();
    
-   $query->bind_result($user, $password);
+   $query->bind_result($password);
    while($query->fetch()){
      if ($password === $pass)
      	$goodLogin=true;
@@ -110,30 +116,51 @@ function check_login($login, $pass){
    
 }
 
-function getPassword($login){
+function getPassword($id){
 	global $db;
-  	
-   	$query = $db->prepare("SELECT `pass` FROM `passwords` WHERE `user` = ?");
+  	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+   	$query = $db->prepare("SELECT `password` FROM `members` WHERE `id` = ?");
    	$query->bind_param('s', $login);
    	$query->execute();
-   	
    	$query->bind_result($password);
    	$query->fetch();
    	$query->close();
    	return $password;
 }
 
-function setPassword($login, $password){
+function getID($email){
 	global $db;
-	$query = $db->prepare("UPDATE `passwords` SET `pass` = ? WHERE `user` = ?");
-	$query->bind_param('ss', $password, $login);
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("SELECT `id` FROM `members` WHERE `email` = ?")
+	$query->bind_param('s', $email);
+	$query->execute();
+	$query->bind_result($id);
+	$query->fetch();
+	$query->close();
+	return $id;
+}
+
+function setPassword($email, $password){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("UPDATE `members` SET `password` = ? WHERE `id` = ?");
+	$query->bind_param('ss', $password, $email);
 	$query->execute();
 	$query->close();
 }
 
 function modifyContact($contact){
 	global $db;
-	$query = $db->prepare("UPDATE `assignment2`.`users` SET `title` = ?, `firstName`=?, `lastName`=?, `email`=?, `webaddr`=?, `home_phone`=?, `work_phone`=?, `mobile_phone`=?, `twitter`=?, `facebook`=?, `image`=?, `comment`=? WHERE `id` = ?");
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("UPDATE `members` SET `title` = ?, `firstName`=?, `lastName`=?, `email`=?, `webaddr`=?, `home_phone`=?, `work_phone`=?, `mobile_phone`=?, `twitter`=?, `facebook`=?, `image`=?, `comment`=? WHERE `id` = ?");
     $query->bind_param('ssssssssssssi', $contact['title'], $contact['firstName'], $contact['lastName'], $contact['email'], $contact['webaddr'], $contact['home_phone'], $contact['work_phone'], $contact['mobile_phone'], $contact['twitter'], $contact['facebook'], $contact['image'], $contact['comment'], $contact['id']);
 
     $query->execute();
@@ -142,8 +169,10 @@ function modifyContact($contact){
 
 function getLast (){
 	global $db;
-	
-	if($result = $db->query("SELECT max(id) FROM users")){
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if($result = $db->query("SELECT max(id) FROM members")){
       //$query = $db->prepare("SELECT max(id) FROM users");
       //$query->execute();
       //$query->bind_result($id);
@@ -159,6 +188,9 @@ function getLast (){
 
 function getContacts(){
    global $db;
+   if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
    if($result = $db->query("SELECT * FROM users ORDER BY lastName ASC")){
       return $result;
    }else{
@@ -169,6 +201,9 @@ function getContacts(){
 function delete($id)
 {
     global $db;
+    if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
     $query = $db->prepare("DELETE FROM `users` WHERE `id` = ?");
     $query->bind_param('i', $id);
     $query->execute();
