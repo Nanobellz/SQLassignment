@@ -20,15 +20,20 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
     <?php
     $oldbad = false;
     $matchbad = false;
-
-    if (isset($_SESSION['user_n']) && !empty($_SESSION['user_n']))
+    $user = $_SESSION['current_user']['email'];
+    //echo "<br> ID:{$_SESSION['current_user']['id']}<br>";
+    $pass = getPassword($_SESSION['current_user']['id']);
+    //print_r($pass);
+    //print_r($_SESSION);
+    //print_r($_POST);
+    if (isset($_SESSION['current_user']['email']) && !empty($_SESSION['current_user']['email']))
     {
 
-      if (isset($_POST) && !empty($_POST['oldpass']) && !empty($_POST['newpass']) && !empty($_POST['confirmpass']))
+      if (isset($_POST) && isset($_POST['oldpass']) && isset($_POST['newpass']) && isset($_POST['confirmpass']))
       {
 
-        $user = md5($_SESSION['user_n']);
-        $pass = getPassword($user);
+        
+        print_r($pass);
         //$adminlogin = loadJson("adminpass.txt");
         $oldpass = md5($_POST['oldpass']);
         $newpass = md5($_POST['newpass']);
@@ -42,10 +47,13 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
             
             //saveJson("adminpass.txt", $adminlogin);
             setPassword($user, $newpass);
+            $id = getID($user);
+            $_SESSION['current_user'] = getContact($id);
             echo"
               <script type='text/javascript'>
                 window.location = 'passconfirm.php';
               </script>";
+
           }
           else
           {
@@ -63,7 +71,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
               <div class = 'span6 offset1'>
                 <form action='change_pass.php' method = 'post'>
                   <fieldset>
-                    <legend>Change Password for user '$user'</legend>
+                    <legend>Change Password for '$user'</legend>
                     <label>Enter old password</label>";
                     
                     if ($oldbad == true)

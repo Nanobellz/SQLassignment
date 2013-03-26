@@ -122,12 +122,44 @@ function getPassword($id){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
    	$query = $db->prepare("SELECT `password` FROM `members` WHERE `id` = ?");
-   	$query->bind_param('s', $login);
+   	$query->bind_param('i', $id);
    	$query->execute();
    	$query->bind_result($password);
    	$query->fetch();
    	$query->close();
    	return $password;
+}
+
+function isPending($id){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if($result = $db->query("SELECT * FROM friends WHERE status = 'pending' AND requested_member = $id")){
+      	if ($result->num_rows > 0){
+      		return true;
+      	}else{
+    		return false;
+      	}
+   	}else{
+      	return false;
+   	}   
+}
+
+function isUserPending(){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if($result = $db->query("SELECT * FROM members WHERE status = 'pending'")){
+		if ($result->num_rows > 0){
+			return true;
+	    }else{
+	      	return false;
+	    }
+	}else{
+		return false;
+   	}   
 }
 
 function getID($email){
@@ -145,11 +177,12 @@ function getID($email){
 }
 
 function setPassword($email, $password){
+	echo $email. " " .$password;
 	global $db;
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-	$query = $db->prepare("UPDATE `members` SET `password` = ? WHERE `id` = ?");
+	$query = $db->prepare("UPDATE `members` SET `password` = ? WHERE `email` = ?");
 	$query->bind_param('ss', $password, $email);
 	$query->execute();
 	$query->close();
@@ -186,12 +219,32 @@ function getLast (){
    }   
 }
 
+function getMyFriends($id){
+	global $db;
+	$friends = array();
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if ($result = $db->query("SELECT * FROM `friends` WHERE requesting_member = $id OR requested_member = $id AND status = 'approved'")){
+		while($row = $result->fetch_assoc()){
+    		if (!in_array($row['requesting_member'], $friends) && $row['requesting_member'] != $id)
+    			$friends[] = $row['requesting_member'];
+    		if (!in_array($row['requested_member'], $friends) && $row['requested_member'] != $id)
+    			$friends[] = $row['requested_member'];
+		}
+		
+		return $friends;
+	}else{
+		return array();
+	}
+}
+
 function getContacts(){
    global $db;
    if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-   if($result = $db->query("SELECT * FROM users ORDER BY lastName ASC")){
+   if($result = $db->query("SELECT * FROM members ORDER BY lastName ASC")){
       return $result;
    }else{
       return array();
@@ -204,7 +257,7 @@ function delete($id)
     if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-    $query = $db->prepare("DELETE FROM `users` WHERE `id` = ?");
+    $query = $db->prepare("DELETE FROM `members` WHERE `id` = ?");
     $query->bind_param('i', $id);
     $query->execute();
 
@@ -679,7 +732,7 @@ function clearContact ()
         }
 	}
 }
-
+/*
 function sortContacts ($contacts)
 {
 	if (!empty($contacts))
@@ -694,5 +747,5 @@ function sortContacts ($contacts)
 		$newcontacts = null;
 	}
 	return $newcontacts;
-}
+}*/
 ?>

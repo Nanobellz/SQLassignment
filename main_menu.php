@@ -23,7 +23,7 @@ $user = $_SESSION["user_n"];
     <br />
     <div class = 'row-fluid'>
       <div class = 'span6 offset1'>
-        <h2>Welcome user "<?php echo "$user"?>" to Contact Manager</h2>
+        <h2>Welcome "<?php echo "$user"?>" to Contact Manager</h2>
       </div>
       <div class = 'span2'>
         <a href="login.php?logout=true" class = 'btn'>Log out</a>
@@ -31,26 +31,34 @@ $user = $_SESSION["user_n"];
     </div>
     <div class = "row-fluid">
       <div class = "span6 offset1">
+        <h3>Your Friends</h3>
         <table class = "table table-striped">
           <tr>
             
             <th>First Name</th>
             <th>Last Name</th>
             <th></th>
-            <th></th>
+            
           </tr>
           <?php
+          $pending = isPending($_SESSION['current_user']['id']);
+          $user_pending = isUserPending();
+          $friends = getMyFriends($_SESSION['current_user']['id']);
           $result = getContacts();
           while($contact = $result->fetch_assoc()){
             $id = $contact['id'];
-            echo "<tr>
+            if (in_array($id, $friends)){
               
-              <td>{$contact['firstName']}</td>
-              <td>{$contact['lastName']}</td>
-              <td><button type = 'button' onclick = 'viewContact($id)' class = 'btn btn-primary'>View</td>
-              <td><button type = 'button' onclick = 'editContact($id)' class = 'btn'>Edit</td>
-              
-            </tr>";
+              echo "<tr>
+                
+                <td>{$contact['firstName']}</td>
+                <td>{$contact['lastName']}</td>
+                <td><button type = 'button' onclick = 'viewContact($id)' class = 'btn btn-primary'>View</td>
+                
+              </tr>";
+
+            }
+
           }
           
           
@@ -59,6 +67,23 @@ $user = $_SESSION["user_n"];
       </div>
     </div>
     <?php
+    if ($pending){
+      echo "
+        <div class = 'row-fluid'>
+          <div class = 'offset1'>
+            <a href='pending.php' class = 'btn btn-info btn-large'>You have friend requests</a>
+          </div>
+        </div>";
+    }
+    if ($user_pending)
+    {
+      echo "
+        <div class = 'row-fluid'>
+          <div class = 'offset1'>
+            <a href='user_pending.php' class = 'btn btn-info btn-large'>There are new user requests</a>
+          </div>
+        </div>";
+    }
     if (isset($contacts))
     // search field
     {
@@ -75,8 +100,7 @@ $user = $_SESSION["user_n"];
     ?>
     <div class = 'row-fluid'>
       <div class = 'offset1'>
-        <p><a href="new_contact.php">Click to create a new contact</a></p>
-        <p>or <a href="change_pass.php">Click to change your password</a></p>
+        <p><a href="change_pass.php">Click to change your password</a></p>
       </div>
     </div>
 
