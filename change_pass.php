@@ -33,7 +33,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
       {
 
         
-        print_r($pass);
+        //print_r($pass);
         //$adminlogin = loadJson("adminpass.txt");
         $oldpass = md5($_POST['oldpass']);
         $newpass = md5($_POST['newpass']);
@@ -96,7 +96,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
                                 <input type = 'password' name='newpass'>
                                 <span class = 'help-inline'>The passwords do not match</span>
                               </div>
-                              <label>Enter new password</label>
+                              <label>Re-enter new password</label>
                               <div class = 'controls'>
                                 <input type = 'password' name = 'confirmpass'>
                                 <span class = 'help-inline'>Please try again</span>

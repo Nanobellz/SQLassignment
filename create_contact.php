@@ -2,12 +2,23 @@
 //create_contact.php
 session_start();
 include "functions.php";
-if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
+if (!isset($_SESSION["new_user"]) || $_SESSION["new_user"] != true)
 {
   header("Location: login.php");
   exit();
 }
-
+$matchbad = false;
+if (isset($_POST)){
+  if (isset($_POST['newpass']) && isset($_POST['confirmpass'])){
+    if ($_POST['newpass'] === $_POST['confirmpass']){
+      $_SESSION['password'] = md5($_POST['newpass']);
+    }
+    else
+    {
+      $matchbad = true;
+    }
+  }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,15 +29,11 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class='row'>
-      <div class = "span10 offset1">
-        <h1>Contact Created Successfully</h1>
-      </div>
-    </div>
+    
     <?php
     $newcontact = array();
     foreach ($_SESSION as $key => $value) {
-      if ($key != "logged_in" && $key != "user_n")
+      if ($key != "logged_in" && $key != "user_n" && $key != "new_user")
       {
         $newcontact[$key] = $value;
       }
@@ -36,37 +43,84 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
     
     $title=$newcontact['title'];
     
-    if (!empty($newcontact["firstName"]))
+    if (isset($newcontact["firstName"]) && !empty($newcontact["firstName"]))
     { 
-      global $db;
+      if (isset($newcontact['password']) && !empty($newcontact['password']))
+      {
+        global $db;
+        
+        if($db->connect_errno > 0){
+          die('Unable to connect to database [' . $db->connect_error . ']');
+        }
+           
+        $query = $db->prepare("INSERT INTO `assignment2`.`members` (`id`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $query->bind_param('sssssssssssss', $newcontact['title'], $newcontact['firstName'], $newcontact['lastName'], $newcontact['email'], $newcontact['password'], $newcontact['webaddr'], $newcontact['home_phone'], $newcontact['work_phone'], $newcontact['mobile_phone'], $newcontact['twitter'], $newcontact['facebook'], $newcontact['image'], $newcontact['comment']);
+        $query->execute();
+        $query->close();
+        
+        echo "<div class='row'>
+                <div class = 'span10 offset1'>
+                  <h1>Contact Created Successfully</h1>";
+                  if (getLast()){
       
-      if($db->connect_errno > 0){
-        die('Unable to connect to database [' . $db->connect_error . ']');
+                    displayContact(getLast());
+                  }
+                  clearContact();
+                echo"</div>
+              </div>
+              <div class = 'row'>
+                <div class = 'offset1'>
+                  <br />
+                  <a href='main_menu.php' class='btn btn-primary'>Return to menu</a>
+                </div>
+              </div>";
       }
-      
+      else
+      {
+        echo "<div class='row'>
+                <div class = 'span10 offset1'>
+                  <form action = 'create_contact.php' method = 'post'>
+                    <fieldset>
+                      <legend>Choose A Password</legend>";
+                    if ($matchbad == true)
+                    {
+                      echo "<div class = 'control-group error'>
+                              <label>Enter new password</label>
+                              <div class = 'controls'>
+                                <input type = 'password' name='newpass'>
+                                <span class = 'help-inline'>The passwords do not match</span>
+                              </div>
+                              <label>Confirm new password</label>
+                              <div class = 'controls'>
+                                <input type = 'password' name = 'confirmpass'>
+                                <span class = 'help-inline'>Please try again</span>
+                              </div>
+                            </div>
+                      ";
+                    }
+                    else
+                    {   
+                    echo" 
+                    <label>Enter new password</label>
+                    <input type='password' name='newpass'>
+                    <label>Confirm new password</label>
+                    <input type='password' name='confirmpass'>";
+                    }
+                    echo "<br><button class='btn btn-large btn-primary' type='submit'>Submit</button>
+                          </fieldset>
+                        </form>
+                      </div>
+                    </div>
+                    ";
 
-
-      $query = $db->prepare("INSERT INTO `assignment2`.`users` (`id`, `title`, `firstName`, `lastName`, `email`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-      $query->bind_param('ssssssssssss', $newcontact['title'], $newcontact['firstName'], $newcontact['lastName'], $newcontact['email'], $newcontact['webaddr'], $newcontact['home_phone'], $newcontact['work_phone'], $newcontact['mobile_phone'], $newcontact['twitter'], $newcontact['facebook'], $newcontact['image'], $newcontact['comment']);
-
-      $query->execute();
-      $query->close();
-     
+                
+      }
     }
-    if (getLast()){
-      
-      displayContact(getLast());
-    }
-    clearContact();
+    
     
 
     ?>
-    <div class = 'row'>
-      <div class = 'offset1'>
-        <br />
-        <a href="main_menu.php" class="btn btn-primary">Return to menu</a>
-      </div>
-    </div>
+    
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </body>

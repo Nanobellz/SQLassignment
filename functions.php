@@ -146,6 +146,48 @@ function isPending($id){
    	}   
 }
 
+function getPending($id){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$pending = array();
+	if($result = $db->query("SELECT * FROM friends WHERE status = 'pending' AND requested_member = $id")){
+		while($row = $result->fetch_assoc()){
+			$pending[] = $row;
+		}
+	}
+	return $pending;
+}
+
+function amIPending($id){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if($result = $db->query("SELECT * FROM members WHERE status != 'pending' AND id = $id")){
+		if ($result->num_rows > 0){
+			return true;
+	    }else{
+	      	return false;
+	    }
+	}else{
+		return false;
+   	}   
+
+}
+
+function confirmFriend($requesting_member, $requested_member){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("UPDATE `friends` SET `status` = 'approved' WHERE `requesting_member` = ? AND `requested_member` = ?");
+	$query->bind_param('ss', $requesting_member, $requested_member);
+	$query->execute();
+	$query->close();
+}
+
 function isUserPending(){
 	global $db;
 	if($db->connect_errno > 0){
@@ -181,7 +223,7 @@ function searchUsers($string){
 	global $db;
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
-	} SELECT * FROM  `members` WHERE  `firstName` LIKE  '%ob%' or `lastName` LIKE  '%ob%'
+	} 
 	$query = $db->prepare("SELECT `id` FROM `members` WHERE `firstName` LIKE CONCAT('%', ?, '%') OR `lastName` LIKE CONCAT('%', ?, '%')");
 	$query->bind_param('ss', $string, $string);
 	$query->execute();
@@ -195,7 +237,7 @@ function searchUsers($string){
 }
 
 function setPassword($email, $password){
-	echo $email. " " .$password;
+	//echo $email. " " .$password;
 	global $db;
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
@@ -259,7 +301,7 @@ function getMyFriends($id){
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-	if ($result = $db->query("SELECT * FROM `friends` WHERE requesting_member = $id OR requested_member = $id AND status = 'approved'")){
+	if ($result = $db->query("SELECT * FROM `friends` WHERE (requesting_member = $id OR requested_member = $id) AND status = 'approved'")){
 		while($row = $result->fetch_assoc()){
     		if (!in_array($row['requesting_member'], $friends) && $row['requesting_member'] != $id)
     			$friends[] = $row['requesting_member'];
@@ -388,6 +430,7 @@ function displayContact ($id)
 }
 
 function previewContact($id){
+	$contact = getContact($id);
 	if (!empty ($contact["image"]))
 	{
 		$image = $contact["image"];
@@ -407,8 +450,8 @@ function previewContact($id){
 		
 		echo "</div>";
 	echo"</div>";
-	}
 }
+
 
 
 function editContact($contact, $validate)

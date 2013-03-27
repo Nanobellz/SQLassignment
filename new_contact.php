@@ -40,6 +40,7 @@ include "regex_validate.php";
 
     if (!empty($fields["title"]) && !empty($fields["firstName"]) && !empty($fields["lastName"]) && $validate['email'] && $validate['phone'] && $validate['work'] && $validate['mobile'] && $validate['image'])
     {
+      $_SESSION['new_user'] = true;
       echo"
         <script type='text/javascript'>
           window.location = 'create_contact.php';

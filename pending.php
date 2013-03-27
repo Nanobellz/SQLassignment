@@ -1,4 +1,5 @@
 <?php
+session_start();
 //pending.php
 ?>
 <!DOCTYPE html>
@@ -14,7 +15,7 @@
     	<div class = 'span10 offset1'>
     		<h2>Access Denied</h2>
     		<p>You need to be authorized in order to enter the site.  Either you have not yet been authorized, or you have been denied access.</p>
-    		<a href='login.php' class = 'btn btn-primary'>Go back</a>
+    		<a href='login.php?logout=true' class = 'btn btn-primary'>Go back</a>
     	</div>
     </div>
 

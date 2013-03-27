@@ -8,6 +8,16 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
   exit();
 }
 $user = $_SESSION["user_n"];
+$confirmed = amIPending($_SESSION['current_user']['id']);
+if (!$confirmed){
+  unset($_SESSION);
+  header("Location: pending.php");
+  exit();
+}
+$pending = isPending($_SESSION['current_user']['id']);
+$user_pending = isUserPending();
+$friends = getMyFriends($_SESSION['current_user']['id']);
+$result = getContacts();
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +33,7 @@ $user = $_SESSION["user_n"];
     <br />
     <div class = 'row-fluid'>
       <div class = 'span6 offset1'>
-        <h2>Welcome "<?php echo "$user"?>" to Contact Manager</h2>
+        <h3>Welcome "<?php echo "$user"?>" to Contact Manager</h3>
       </div>
       <div class = 'span2'>
         <a href="login.php?logout=true" class = 'btn'>Log out</a>
@@ -41,10 +51,7 @@ $user = $_SESSION["user_n"];
             
           </tr>
           <?php
-          $pending = isPending($_SESSION['current_user']['id']);
-          $user_pending = isUserPending();
-          $friends = getMyFriends($_SESSION['current_user']['id']);
-          $result = getContacts();
+          
           while($contact = $result->fetch_assoc()){
             $id = $contact['id'];
             if (in_array($id, $friends)){
@@ -71,7 +78,7 @@ $user = $_SESSION["user_n"];
       echo "
         <div class = 'row-fluid'>
           <div class = 'offset1'>
-            <a href='pending.php' class = 'btn btn-info btn-large'>You have friend requests</a>
+            <a href='confirm_friends.php' class = 'btn btn-info btn-large'>You have friend requests</a>
           </div>
         </div>";
     }
