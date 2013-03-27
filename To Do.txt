@@ -7,3 +7,4 @@ Add friends request button (partly done)
 Make “email” a required field like firstName and lastName, on sign-up page (done)
 Check "email" field to ensure that values are unique on create/edit
 Add a password field to the create/edit user code
+Add a page to confirm pending new user requests (gave this to Stan)
