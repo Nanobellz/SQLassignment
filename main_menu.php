@@ -75,7 +75,7 @@ $user = $_SESSION["user_n"];
           </div>
         </div>";
     }
-    if ($user_pending)
+    if ($user_pending && $_SESSION['current_user']['type'] == 'admin')
     {
       echo "
         <div class = 'row-fluid'>
@@ -84,19 +84,18 @@ $user = $_SESSION["user_n"];
           </div>
         </div>";
     }
-    if (isset($contacts))
     // search field
-    {
-      echo "
+    
+      echo "<br>
         <div class = 'row-fluid'>
           <div class = 'offset1'>
             <form class='form-search' action = 'search.php' method = 'get'>
               <input type='text' name = 'search' class='input-medium search-query'>
-              <button type='submit' class='btn'>Search</button>
+              <button type='submit' class='btn'>Search for Users</button>
             </form>
           </div>
         </div>";
-    }
+    
     ?>
     <div class = 'row-fluid'>
       <div class = 'offset1'>

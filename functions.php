@@ -176,6 +176,24 @@ function getID($email){
 	return $id;
 }
 
+function searchUsers($string){
+	$ids = array();
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("SELECT `id` FROM `members` WHERE `firstName` LIKE CONCAT('%', ?, '%') OR `lastName` LIKE CONCAT('%', ?, '%')");
+	$query->bind_param('ss', $string, $string);
+	$query->execute();
+	$query->bind_result($id);
+	while($query->fetch())
+	{
+		$ids[] = $id;
+	}
+	$query->close();
+	return $ids;
+}
+
 function setPassword($email, $password){
 	echo $email. " " .$password;
 	global $db;

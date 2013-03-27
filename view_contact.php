@@ -49,7 +49,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
         <a href='main_menu.php' class='btn btn-primary'>Return to main menu</a>
         <?php 
 
-        if (isset($successDisplay) && $successDisplay == true)
+        if (isset($successDisplay) && $successDisplay == true && $_SESSION['current_user']['type'] == 'admin')
           echo"<button type = 'button' onclick = 'deleteContact($id)' class = 'btn btn-danger'>Delete</button>";
         ?>
       </div>
