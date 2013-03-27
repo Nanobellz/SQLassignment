@@ -137,9 +137,14 @@ else
     </div>
     <script type="text/javascript">
       // Some functions to activate the buttons above
-      function viewContact(pageid)
+      function viewContact(id)
       {
-        var location = "view_contact.php?id=" + pageid;
+        var location = "view_contact.php?id=" + id;
+        window.location = location;
+      }
+      function addFriend(id)
+      {
+        var location = "add_friend.php?id=" + id;
         window.location = location;
       }
     </script>

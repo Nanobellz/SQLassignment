@@ -181,7 +181,7 @@ function searchUsers($string){
 	global $db;
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
-	}
+	} SELECT * FROM  `members` WHERE  `firstName` LIKE  '%ob%' or `lastName` LIKE  '%ob%'
 	$query = $db->prepare("SELECT `id` FROM `members` WHERE `firstName` LIKE CONCAT('%', ?, '%') OR `lastName` LIKE CONCAT('%', ?, '%')");
 	$query->bind_param('ss', $string, $string);
 	$query->execute();
@@ -216,6 +216,22 @@ function modifyContact($contact){
 
     $query->execute();
     $query->close();
+}
+
+function flagFriend($requesting_member, $requested_member){
+	global $db;
+	$thisworked = false;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("INSERT INTO `friends` (`id`, `requesting_member`, `requested_member`) VALUES (NULL, ?, ?)");
+    $query->bind_param('ii', $requesting_member, $requested_member);
+    $query->execute();
+    if ($db->affected_rows>0){
+    	$thisworked = true;
+    }
+    $query->close();
+    return $thisworked;
 }
 
 function getLast (){
@@ -370,6 +386,30 @@ function displayContact ($id)
 	
 	
 }
+
+function previewContact($id){
+	if (!empty ($contact["image"]))
+	{
+		$image = $contact["image"];
+	}
+	else
+	{
+		$image = "http://placekitten.com/200/200";
+	}
+	echo "
+	<div class = 'row'>
+		<div class = 'span3 offset1'>
+			<img src = $image alt = 'Contact Image' class='img-rounded' height = '200' width = '200'>
+		</div>
+		<div class = 'span8'>
+		<dl class='dl-horizontal'>
+		<dt>Name</dt><dd>{$contact['title']} {$contact['firstName']} {$contact['lastName']}</dd>";
+		
+		echo "</div>";
+	echo"</div>";
+	}
+}
+
 
 function editContact($contact, $validate)
 {
