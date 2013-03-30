@@ -15,11 +15,18 @@ if(isset($_POST['email'])){
   //hashes the inputs so they can be compared to the stored hashes
   if(check_login($user, $pass))
   {
-    $_SESSION['logged_in'] = true;
-      //$_SESSION['new_create'] = true;
     $id =  getID($user);
     $_SESSION['current_user'] = getContact($id);
+    if ($_SESSION['current_user']['status'] =='pending')
+    {
+      echo "<script type='text/javascript'>
+            window.location = 'pending.php';
+          </script>";
+    }
+      //$_SESSION['new_create'] = true;
+    
     $_SESSION['user_n'] = $_SESSION['current_user']['firstName']. " " . $_SESSION['current_user']['lastName'];
+    $_SESSION['logged_in'] = true;
   }
   else
   { //inform user of an error
@@ -99,7 +106,7 @@ else if(isset($_GET['logout']))
   else echo '
     <div class="container">
       <form class="form-inline" name = "login_form" action="login.php" method = "POST">
-        <h2 class="form-inline-heading">Administrator Login</h2>';
+        <h2 class="form-inline-heading">Log in to Contact Management</h2>';
         if(isset($err)){
         echo '<span style="color:red;">' . $err .'</span>';
         }

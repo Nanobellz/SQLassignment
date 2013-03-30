@@ -2,7 +2,7 @@
 //new_contact.php
 session_start();
 include "functions.php";
-include "regex_validate.php";
+//include "regex_validate.php";
 //if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
 //{
 //  header("Location: login.php");

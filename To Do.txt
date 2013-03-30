@@ -1,6 +1,6 @@
 Rewrite old assignment to use mySQL database (done, except Search)
 Modify old code to suit the new tables (done)
-Change “new contact” page into “sign up” page
+Change “new contact” page into “sign up” page (done?)
 Add “member” and “admin” views. (partly done)
 Add “view friends” view (done)
 Add friends request button (partly done)
@@ -8,6 +8,7 @@ Make “email” a required field like firstName and lastName, on sign-up page (done
 Check "email" field to ensure that values are unique on create/edit
 Add a password field to the create/edit user code (done)
 Add a page to confirm pending new user requests (gave this to Stan)
-Give admins ability to suspend accounts
+Give admins ability to suspend accounts and unsuspend accounts (done)
 Add admin "create profile" function
-Add admin "edit profile" function
+Add admin "edit profile" function (done)
+Add admin "show all users" function 

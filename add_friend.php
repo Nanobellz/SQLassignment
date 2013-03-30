@@ -37,7 +37,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
       echo"<div class = 'row'>
             <div class='offset1'>
               <h3>Add Friend</h3>
-              <p>Would you like to send a friend request to te following contact?</p>
+              <p>Would you like to send a friend request to the following contact?</p>
             </div>
           </div>";
       previewContact($id);

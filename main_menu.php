@@ -78,7 +78,7 @@ $result = getContacts();
       echo "
         <div class = 'row-fluid'>
           <div class = 'offset1'>
-            <a href='confirm_friends.php' class = 'btn btn-info btn-large'>You have friend requests</a>
+            <a href='confirm_friends.php' class = 'btn btn-info btn-large'>You have friend requests</a> %nbsp;
           </div>
         </div>";
     }
@@ -87,9 +87,22 @@ $result = getContacts();
       echo "
         <div class = 'row-fluid'>
           <div class = 'offset1'>
-            <a href='user_pending.php' class = 'btn btn-info btn-large'>There are new user requests</a>
+            <a href='user_pending.php' class = 'btn btn-info btn-large'>There are new user requests</a> &nbsp;
           </div>
         </div>";
+    }
+    if ($_SESSION['current_user']['type'] == 'admin')
+    {
+      echo "
+      <br>
+      <div class = 'row-fluid'>
+        <div class = 'span1 offset1'>
+          <a href = 'new_contact.php' class = 'btn'>Create a user</a>
+        </div>
+        <div class = 'span1'>
+          <a href = 'view_all.php' class = 'btn'>View all users</a>
+        </div>
+      </div>";
     }
     // search field
     
@@ -97,8 +110,10 @@ $result = getContacts();
         <div class = 'row-fluid'>
           <div class = 'offset1'>
             <form class='form-search' action = 'search.php' method = 'get'>
-              <input type='text' name = 'search' class='input-medium search-query'>
-              <button type='submit' class='btn'>Search for Users</button>
+              <div class='input-append'>
+                <input type='text' name = 'search' class='input-medium search-query' placeholder='Search for Users'>
+                <button type='submit' class='btn'>Search</button>
+              </div>
             </form>
           </div>
         </div>";

@@ -2,7 +2,7 @@
 //search.php
 session_start();
 include "functions.php";
-include "regex_validate.php";
+//include "regex_validate.php";
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
 {
   header("Location: login.php");
@@ -71,6 +71,8 @@ else
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <?php
     
     if (!empty($ids))
@@ -84,9 +86,12 @@ else
                 
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th></th>
+                    <th></th>";
+                    if ($_SESSION['current_user']['type'] == "admin"){
+                      echo "<th>Admin functions</th><th></th>";
+                    }
                     
-                  </tr>";
+                  echo"</tr>";
       
       while($item = $result->fetch_assoc()){
         $contact[] = $item;      
@@ -109,7 +114,18 @@ else
               }else{
                 echo "<td></td>";
               }
-              
+              if ($_SESSION['current_user']['type'] =="admin"){
+                echo "<td><button type = 'button' onclick = 'adminEdit($id)' class = 'btn btn-primary'>Edit User</td>";
+                      if ($contact[$key]['status'] == 'active' && $contact[$key]['type'] != 'admin'){
+                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-warning'>Suspend User</td>";
+                      }
+                      else if ($contact[$key]['status'] == 'suspended'){
+                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-success'>Unsuspend User</td>";
+                      }
+                      else{
+                        echo "<td></td>";
+                      }
+              }
             echo "</tr>";
           }
         }
@@ -128,6 +144,7 @@ else
     }
     ?>
         </table>
+        
       </div>
     </div>
     <div class = 'row'>
@@ -147,8 +164,17 @@ else
         var location = "add_friend.php?id=" + id;
         window.location = location;
       }
+      function adminEdit(id)
+      {
+        var location = "edit_contact.php?id=" + id;
+        window.location = location;
+      }
+      function adminSuspend(id, suspend)
+      {
+        var location = "admin_suspend.php?id=" + id + "suspend=" + suspend;
+        window.location = location;
+      }
     </script>
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    
   </body>
 </html>

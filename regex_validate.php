@@ -1,5 +1,6 @@
 <?php
 //regex_validate.php 
+include "dbcall.php";
 function validatePhone($phoneString)
 {
 	// cut out everything except numbers
@@ -57,7 +58,32 @@ function validateEmail($emailString)
 
 	// yes, I can actually explain this regex.  And all the other ones.
 
-	return preg_match("/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b/", $emailString);
+	if(preg_match("/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b/", $emailString))
+	{
+		if(isEmailUnique($emailString)){
+			return 'okay';
+		}
+		return 'duplicate';
+	}
+	else
+	{
+		return 'invalid';
+	}
 }
 
+function isEmailOkay($email){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if($result = $db->query("SELECT * FROM members WHERE email = $email")){
+		if ($result->num_rows > 0){
+			return false;
+	    }else{
+	      	return true;
+	    }
+	}else{
+		return true;
+   	}   
+}
 ?>

@@ -52,26 +52,37 @@ if (isset($_POST)){
         if($db->connect_errno > 0){
           die('Unable to connect to database [' . $db->connect_error . ']');
         }
-           
+        if (isset($_SESSION['current_user']['type']) && $_SESSION['current_user']['type'] == 'admin'){
+        $query = $db->prepare("INSERT INTO `assignment2`.`members` (`id`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`, `status`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $newcontact['status'] = "active";
+        $query->bind_param('ssssssssssssss', $newcontact['title'], $newcontact['firstName'], $newcontact['lastName'], $newcontact['email'], $newcontact['password'], $newcontact['webaddr'], $newcontact['home_phone'], $newcontact['work_phone'], $newcontact['mobile_phone'], $newcontact['twitter'], $newcontact['facebook'], $newcontact['image'], $newcontact['comment'], $newcontact['status']);
+        }else{   
         $query = $db->prepare("INSERT INTO `assignment2`.`members` (`id`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $query->bind_param('sssssssssssss', $newcontact['title'], $newcontact['firstName'], $newcontact['lastName'], $newcontact['email'], $newcontact['password'], $newcontact['webaddr'], $newcontact['home_phone'], $newcontact['work_phone'], $newcontact['mobile_phone'], $newcontact['twitter'], $newcontact['facebook'], $newcontact['image'], $newcontact['comment']);
+        }
         $query->execute();
         $query->close();
         
         echo "<div class='row'>
                 <div class = 'span10 offset1'>
                   <h1>Contact Created Successfully</h1>";
+                  if (!isset($_SESSION['current_user']['type']) || $_SESSION['current_user']['type'] != 'admin'){
+                    echo "<p>This account must be verified by an admin before it can be activated.  Thank you for applying.</p>";
+                  }
+
                   if (getLast()){
       
                     displayContact(getLast());
                   }
+                  
+                  unset($newcontact);
                   clearContact();
                 echo"</div>
               </div>
               <div class = 'row'>
                 <div class = 'offset1'>
                   <br />
-                  <a href='main_menu.php' class='btn btn-primary'>Return to menu</a>
+                  <a href='main_menu.php' class='btn btn-primary'>Go Back</a>
                 </div>
               </div>";
       }

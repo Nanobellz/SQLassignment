@@ -2,7 +2,7 @@
 //edit_contact.php
 session_start();
 include "functions.php";
-include "regex_validate.php";
+//include "regex_validate.php";
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
 {
   header("Location: login.php");
@@ -36,14 +36,17 @@ if (!isset ($_SESSION['edited']))
         if (!isset($_GET[$key])) 
           $_GET[$key] = $contact[$key];
       }
+      $_SESSION['editingId'] = $_GET['id'];
+      //echo $_SESSION['editingId'];
       $validate = validateFields($_GET);
+      unset($_SESSION['editingId']);
       
       
       echo "<h3 class = 'text-center'>Editing contact #{$_GET['id']}</h3>
           </div>
         </div>";
         if (!empty($_GET["title"]) && !empty($_GET["firstName"]) && !empty($_GET["lastName"]) 
-          && $validate['email'] && $validate['phone'] && $validate['work'] && $validate['mobile'] && $validate['image']
+          && $validate['email']=='okay' && $validate['phone'] && $validate['work'] && $validate['mobile'] && $validate['image']
           && $_SESSION['edited'])
         {
           $_SESSION['edited']=false;
@@ -68,7 +71,7 @@ if (!isset ($_SESSION['edited']))
 
           saveJson("contactlist.txt", $contact_list);*/
           displayContact($_GET['id']);
-          clearContact();
+          //clearContact();
           echo"
           <br />
           <div class = 'row'>

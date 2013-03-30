@@ -2,7 +2,7 @@
 //functions.php
 
 $db = new mysqli('localhost', 'admin', 'pass', 'assignment2');
-
+//$db = new mysqli('http://pteam13.gblearn.com:3306', 'pteam13_admin', '+inm]GV#3SJ*', 'pteam13_comp1230');
 /*function saveJson ($filename, $save_object)
 {
 	$json_string = json_encode($save_object);
@@ -177,6 +177,10 @@ function amIPending($id){
 
 }
 
+function confirmUser($id){
+	
+}
+
 function confirmFriend($requesting_member, $requested_member){
 	global $db;
 	if($db->connect_errno > 0){
@@ -203,6 +207,8 @@ function isUserPending(){
 		return false;
    	}   
 }
+
+
 
 function getID($email){
 	global $db;
@@ -535,7 +541,7 @@ function editContact($contact, $validate)
 	    <div class='controls' style='margin-left: 180px'>
 	      <div class='input-prepend'>
 	        <span class='add-on'><i class='icon-envelope-alt'";
-	        if ((isset($contact["email"]) && empty($contact["email"])) || (isset($validate['email']) && !$validate['email']))
+	        if ((isset($contact["email"]) && empty($contact["email"])) || (isset($validate['email']) && ($validate['email'] == 'invalid' || $validate['email'] =='duplicate')))
 	          {
 	            echo"style = 'color:red'";
 	          }
@@ -550,9 +556,13 @@ function editContact($contact, $validate)
 	      </div>
 	    </div>
 	  </div>";
-	  if (isset($validate['email']) && !$validate['email'])
+	  if (isset($validate['email']) && $validate['email'] == 'invalid')
 	  {
 	    echo "<div class = 'span3 offset1 alert alert-error'>Not a valid email.</div>";
+	  }
+	  if (isset($validate['email']) && $validate['email'] == 'duplicate')
+	  {
+	  	echo "<div class = 'span3 offset1 alert alert-error'>This email address is already in use.</div>";
 	  }
 	  
 	  if ((isset($contact["firstName"]) && empty($contact["firstName"])) || (isset($contact["lastName"]) && empty($contact["lastName"])) || (isset($contact["email"])) && empty($contact["email"]))
@@ -747,7 +757,7 @@ function editContact($contact, $validate)
 
 function validateFields($fields)
 {
-	$validate['email'] = true;
+	$validate['email'] = null;
 	$validate['phone'] = true;
 	$validate['work'] = true;
 	$validate['mobile'] = true;
@@ -783,8 +793,9 @@ function validateFields($fields)
 		}
 	}
 	  
-	if (isset($fields["email"]) && !empty($fields["email"]))
+	if (isset($fields["email"]) && !empty($fields["email"])){
 	  $validate['email'] = validateEmail($fields["email"]);
+	}
 
 	if (isset($fields["home_phone"]) && !empty($fields["home_phone"]))
 	{
@@ -827,7 +838,7 @@ function validateFields($fields)
 function clearContact ()
 {
 	foreach ($_SESSION as $key => $value) {
-		if ($key != "logged_in" && $key != "user_n")
+		if ($key != "logged_in" && $key != "user_n" && $key != "current_user")
         {
           unset($_SESSION[$key]);
         }
@@ -849,4 +860,107 @@ function sortContacts ($contacts)
 	}
 	return $newcontacts;
 }*/
+
+
+function validatePhone($phoneString)
+{
+	// cut out everything except numbers
+	$digits = preg_replace("/[^0-9]/", '', $phoneString);
+	// check to see if we have 10 or 11 digits
+	if (strlen($digits)==11 or strlen($digits) == 10)
+	{
+		// if it has 11 digits, the first digit should be 1.  Otherwise, it's not a valid #
+		if (strlen($digits) == 11)
+		{
+			// if it has 11 digits and the first digit is 1, it's valid, so we can return true
+			if (preg_match("/^1/", $digits))
+			{
+				return true;
+			}
+			else // if it has 11 digits and the first digit isn't 1, it's invalid
+			{
+				return false;
+			}
+		}
+		else // if it has 10 digits
+		{
+			// it's probably a phone number or at least can pass for one
+			return true;
+		}
+
+	}
+	else // it's not the right number of digits, and so it's not a good phone #
+	return false;
+}
+
+function trimPhone($phoneString) // make sure to validatePhone before attempting this!
+{
+	// cut out everything except numbers
+	$digits = preg_replace("/[^0-9]/", '', $phoneString);
+	// if it has 11 digits, the first digit should be 1, because we validated already
+	if (strlen($digits) == 11)
+	{
+		// so let's strip it out
+		$digits = preg_replace("/^1/", '', $digits);
+	}
+	// now we should have a nice 10-digit number with no other characters in it.
+	// so let's break it up into a 3-3-4 pattern.
+	preg_match("/\b([0-9]{3})([0-9]{3})([0-9]{4})\b/", $digits, $matches);
+	$newphone = "(" . $matches[1] . ")" . " " . $matches[2]."-".$matches[3];
+	return $newphone;
+
+}
+
+function validateEmail($emailString)
+{
+	// returns true if the email address is valid
+	// a valid email address has the form: first@second.third, where third is betwen 2 and 4 characters
+	// and first can include some more punctuation than second is allowed to because second is a domain
+
+	// yes, I can actually explain this regex.  And all the other ones.
+
+	if(preg_match("/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b/", $emailString))
+	{
+		if(isEmailUnique($emailString)){
+			return 'okay';
+		}
+		//echo 'duplicate';
+		return 'duplicate';
+	}
+	else
+	{
+		return 'invalid';
+	}
+}
+
+function isEmailUnique($email){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	//echo $email;
+	if($result = $db->query("SELECT * FROM members WHERE email LIKE '$email'")){
+		if ($result->num_rows > 0){//check to see whether the email already exists
+			//and if it does,
+			while($row = $result->fetch_assoc()){
+
+				// check to make sure it's not the email of the user currently being edited
+				if (!isset($_SESSION['editingId'])){//if this isn't being called from edit_contact.php, editingId won't be set, therefore this is a new user, and the email is invalid
+					return false; 
+				}
+				if ($row['id'] == $_SESSION['editingId']){//but if it's a user being edited, editingId will be set, and so we check it against the id belonging to the email in question
+					return true; //if they're the same, we're editing the contact that belongs to that email
+				}
+				return false; // but if they're not the same, then we're trying to set the email of the user currently being edited to be the same as another user
+			}
+			
+
+	    }else{
+	      	return true; // if the email doesn't already exist, we're good
+	    }
+	}else{
+		//echo "test";
+		return false; // if we can't actually query the database, we'll assume that the email already exists, just to be safe
+   	}   
+}
 ?>
