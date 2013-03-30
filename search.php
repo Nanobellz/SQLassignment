@@ -117,10 +117,10 @@ else
               if ($_SESSION['current_user']['type'] =="admin"){
                 echo "<td><button type = 'button' onclick = 'adminEdit($id)' class = 'btn btn-primary'>Edit User</td>";
                       if ($contact[$key]['status'] == 'active' && $contact[$key]['type'] != 'admin'){
-                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-warning'>Suspend User</button></td>";
+                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, &#39;{$contact[$key]['status']}&#39;)' class = 'btn btn-warning'>Suspend User</button></td>";
                       }
                       else if ($contact[$key]['status'] == 'suspended'){
-                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-success'>Unsuspend User</button></td>";
+                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, &#39;{$contact[$key]['status']}&#39;)' class = 'btn btn-success'>Unsuspend User</button></td>";
                       }
                       else{
                         echo "<td></td>";

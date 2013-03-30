@@ -60,6 +60,13 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true || !isset($
         </table>
       </div>
     </div>
+    <br />
+    <div class = 'row-fluid'>
+      <div class = 'span6 offset1'>
+        <a href='main_menu.php' class='btn btn-primary'>Return to main menu</a>
+        
+      </div>
+    </div>
     <script type="text/javascript">
       // Some functions to activate the buttons above
       function viewContact(id)

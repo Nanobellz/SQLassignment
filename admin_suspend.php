@@ -26,7 +26,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true || !isset($
 
     if(isset($_GET['id']) && !empty($_GET['id']))
     { 
-      print_r($_GET);
+      //print_r($_GET);
       if(isset($_GET['suspend']) && $_GET['suspend'] == 'active')
       {
         if (isset($_GET['confirm']) && $_GET['confirm'] == true)

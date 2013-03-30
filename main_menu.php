@@ -40,7 +40,7 @@ $result = getContacts();
       </div>
     </div>
     <div class = "row-fluid">
-      <div class = "span6 offset1">
+      <div class = "span4 offset1">
         <h3>Your Friends</h3>
         <table class = "table table-striped">
           <tr>
