@@ -9,6 +9,6 @@ Check "email" field to ensure that values are unique on create/edit
 Add a password field to the create/edit user code (done)
 Add a page to confirm pending new user requests (gave this to Stan)
 Give admins ability to suspend accounts and unsuspend accounts (done)
-Add admin "create profile" function
+Add admin "create profile" function (done)
 Add admin "edit profile" function (done)
 Add admin "show all users" function 
