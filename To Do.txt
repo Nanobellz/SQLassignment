@@ -5,10 +5,13 @@ Add “member” and “admin” views. (partly done)
 Add “view friends” view (done)
 Add friends request button (partly done)
 Make “email” a required field like firstName and lastName, on sign-up page (done)
-Check "email" field to ensure that values are unique on create/edit
+Check "email" field to ensure that values are unique on create/edit (done)
 Add a password field to the create/edit user code (done)
 Add a page to confirm pending new user requests (gave this to Stan)
 Give admins ability to suspend accounts and unsuspend accounts (done)
 Add admin "create profile" function (done)
 Add admin "edit profile" function (done)
-Add admin "show all users" function 
+Add admin "show all users" function (done)
+
+Go through and add the "am I pending" script at the top of main_menu.php to every page that has a login redirect
+Make sure you can't delete all the admins

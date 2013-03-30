@@ -181,6 +181,28 @@ function confirmUser($id){
 	
 }
 
+function suspend($id){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("UPDATE `members` SET `status` = 'suspended' WHERE `id` = ?");
+	$query->bind_param('i', $id);
+	$query->execute();
+	$query->close();
+}
+
+function unsuspend($id){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	$query = $db->prepare("UPDATE `members` SET `status` = 'active' WHERE `id` = ?");
+	$query->bind_param('i', $id);
+	$query->execute();
+	$query->close();
+}
+
 function confirmFriend($requesting_member, $requested_member){
 	global $db;
 	if($db->connect_errno > 0){

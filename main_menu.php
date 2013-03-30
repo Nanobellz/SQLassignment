@@ -60,7 +60,7 @@ $result = getContacts();
                 
                 <td>{$contact['firstName']}</td>
                 <td>{$contact['lastName']}</td>
-                <td><button type = 'button' onclick = 'viewContact($id)' class = 'btn btn-primary'>View</td>
+                <td><button type = 'button' onclick = 'viewContact($id)' class = 'btn btn-primary'>View</button></td>
                 
               </tr>";
 

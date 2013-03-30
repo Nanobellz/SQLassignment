@@ -108,19 +108,19 @@ else
               <td>{$contact[$key]['firstName']}</td>
               <td>{$contact[$key]['lastName']}</td>";
               if (in_array($id, $friends)){
-                echo "<td><button type = 'button' onclick = 'viewContact($id)' class = 'btn btn-primary'>View</td>";
+                echo "<td><button type = 'button' onclick = 'viewContact($id)' class = 'btn btn-primary'>View</button></td>";
               }else if ($id != $_SESSION['current_user']['id']){
-                echo "<td><button type = 'button' onclick = 'addFriend($id)' class = 'btn'>Add Friend</td>";
+                echo "<td><button type = 'button' onclick = 'addFriend($id)' class = 'btn'>Add Friend</button></td>";
               }else{
                 echo "<td></td>";
               }
               if ($_SESSION['current_user']['type'] =="admin"){
                 echo "<td><button type = 'button' onclick = 'adminEdit($id)' class = 'btn btn-primary'>Edit User</td>";
                       if ($contact[$key]['status'] == 'active' && $contact[$key]['type'] != 'admin'){
-                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-warning'>Suspend User</td>";
+                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-warning'>Suspend User</button></td>";
                       }
                       else if ($contact[$key]['status'] == 'suspended'){
-                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-success'>Unsuspend User</td>";
+                        echo "<td><button type = 'button' onclick = 'adminSuspend($id, {$contact[$key]['status']})' class = 'btn btn-success'>Unsuspend User</button></td>";
                       }
                       else{
                         echo "<td></td>";
@@ -171,7 +171,7 @@ else
       }
       function adminSuspend(id, suspend)
       {
-        var location = "admin_suspend.php?id=" + id + "suspend=" + suspend;
+        var location = "admin_suspend.php?id=" + id + "&suspend=" + suspend;
         window.location = location;
       }
     </script>
