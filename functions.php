@@ -214,6 +214,22 @@ function confirmFriend($requesting_member, $requested_member){
 	$query->close();
 }
 
+function isLastAdmin(){
+	global $db;
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if($result = $db->query("SELECT * FROM members WHERE type = 'admin'")){ // is there only one admin left?
+		if ($result->num_rows == 1){
+			return true; //if yes, return true
+	    }else{
+	      	return false; //if no, return false
+	    }
+	}else{
+		return true; // if we can't tell, assume there is only one, so we don't accidentally delete the last one
+   	}   
+}
+
 function isUserPending(){
 	global $db;
 	if($db->connect_errno > 0){
@@ -343,6 +359,31 @@ function getMyFriends($id){
 	}
 }
 
+function removeFriend($friend1, $friend2){
+	global $db;
+	$friends = array();
+	if($db->connect_errno > 0){
+	    die('Unable to connect to database [' . $db->connect_error . ']');
+	}
+	if ($result = $db->query("SELECT * FROM `friends` WHERE ((requesting_member = $friend1 OR requested_member = $friend1) AND (requesting_member = $friend2 OR requested_member = $friend2)) AND status = 'approved'")){
+		while ($row = $result->fetch_assoc()){
+			if ($row['requested_member'] == $friend1 && $row['requesting_member'] == $friend2 || $row['requesting_member'] == $friend1 && $row['requested_member'] == $friend2){
+				$friends[] = $row['id'];
+			}
+		}
+	}
+	else{
+		die("Couldn't get query");
+	}
+	foreach ($friends as $key => $value) {
+		$query = $db->prepare("DELETE FROM `friends` WHERE `id` = ?");
+	    $query->bind_param('i', $friends[$key]);
+	    $query->execute();
+	    $query->close();
+	}
+	
+}
+
 function getContacts(){
    global $db;
    if($db->connect_errno > 0){
@@ -364,6 +405,7 @@ function delete($id)
     $query = $db->prepare("DELETE FROM `members` WHERE `id` = ?");
     $query->bind_param('i', $id);
     $query->execute();
+    $query->close();
 
     echo"<script type='text/javascript'>
       window.location = 'main_menu.php';
@@ -384,8 +426,8 @@ function displayContact ($id)
 		$image = "http://placekitten.com/200/200";
 	}
 	echo "
-	<div class = 'row'>
-		<div class = 'span3 offset1'>
+	<div class = 'row-fluid'>
+		<div class = 'span3'>
 			<img src = $image alt = 'Contact Image' class='img-rounded' height = '200' width = '200'>
 		</div>
 		<div class = 'span8'>
@@ -766,14 +808,26 @@ function editContact($contact, $validate)
 	  </div>
   </div>
   <div class = row>
-	  <div class='control-group' style = 'margin-left:180px'>
-	    <div class='controls'>
-	      
-	      <button type='submit' class='btn btn-large btn-primary'>Submit</button>
-	      <a href='main_menu.php' class = 'btn btn-large'>Cancel</a>
-	    </div>
+	<div class='control-group' style = 'margin-left:180px'>";
+  if (isset($_SESSION['current_user']['type']) && $_SESSION['current_user']['type'] == 'admin')
+  	{echo"
+	  
+		    <div class='controls'>
+		      <label class='radio'>
+			  <input type='radio' name='type' id='type1' value='member' checked>
+			  User is a member.
+			</label>
+			<label class='radio'>
+			  <input type='radio' name='type' id='type2' value='admin'>
+			  User is an admin.
+			</label>";
+	}
+	echo"
+		      <button type='submit' class='btn btn-large btn-primary'>Submit</button>
+		      <a href='main_menu.php' class = 'btn btn-large'>Cancel</a>
+		    </div>
+		  </div>
 	  </div>
-  </div>
   </form>";
 }
 

@@ -42,7 +42,7 @@ if (!isset ($_SESSION['edited']))
       unset($_SESSION['editingId']);
       
       
-      echo "<h3 class = 'text-center'>Editing contact #{$_GET['id']}</h3>
+      echo "<h3 class = 'text-center'>Editing {$_GET['firstName']} {$_GET['lastName']}</h3>
           </div>
         </div>";
         if (!empty($_GET["title"]) && !empty($_GET["firstName"]) && !empty($_GET["lastName"]) 

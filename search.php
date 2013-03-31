@@ -77,7 +77,7 @@ else
     
     if (!empty($ids))
     {
-      echo "<div class = 'row'>
+      echo "<div class = 'row-fluid'>
               <div class = 'span6 offset1'>
                 <h3>Searching for \"{$_GET['search']}\"</h3>
               
@@ -88,7 +88,7 @@ else
                     <th>Last Name</th>
                     <th></th>";
                     if ($_SESSION['current_user']['type'] == "admin"){
-                      echo "<th>Admin functions</th><th></th>";
+                      echo "<th colspan='2'>Admin functions</th>";
                     }
                     
                   echo"</tr>";
@@ -123,7 +123,8 @@ else
                         echo "<td><button type = 'button' onclick = 'adminSuspend($id, &#39;{$contact[$key]['status']}&#39;)' class = 'btn btn-success'>Unsuspend User</button></td>";
                       }
                       else{
-                        echo "<td></td>";
+                        echo "<td><p class='text-info text-center'>&nbsp;<i class='icon-user'></i>&nbsp;Admin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td>";
+                        
                       }
               }
             echo "</tr>";
@@ -136,7 +137,7 @@ else
     }
     else
     {
-      echo "<div class = 'row'>
+      echo "<div class = 'row-fluid'>
               <div class = 'offset1'>
                 <h3>No contacts found that match the search term</h3>
               </div>
@@ -147,7 +148,7 @@ else
         
       </div>
     </div>
-    <div class = 'row'>
+    <div class = 'row-fluid'>
       <div class = 'offset1'>
         <a href = 'main_menu.php' class = 'btn btn-primary'>Return to Menu</a>
       </div>

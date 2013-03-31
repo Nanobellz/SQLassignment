@@ -1,9 +1,9 @@
-Rewrite old assignment to use mySQL database (done, except Search)
+Rewrite old assignment to use mySQL database (done)
 Modify old code to suit the new tables (done)
 Change “new contact” page into “sign up” page (done?)
 Add “member” and “admin” views. (partly done)
 Add “view friends” view (done)
-Add friends request button (partly done)
+Add friends request button (done)
 Make “email” a required field like firstName and lastName, on sign-up page (done)
 Check "email" field to ensure that values are unique on create/edit (done)
 Add a password field to the create/edit user code (done)
@@ -14,4 +14,8 @@ Add admin "edit profile" function (done)
 Add admin "show all users" function (done)
 
 Go through and add the "am I pending" script at the top of main_menu.php to every page that has a login redirect
-Make sure you can't delete all the admins
+Make sure you can't delete all the admins (done)
+Change default on login page
+Make button to remove friends (from View Contact screen)
+alphebetize functions in functions.php
+add admin checkbox to "create user" (done)

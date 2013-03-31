@@ -17,8 +17,8 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class = 'row'>
-      <div class = 'span8 offset1'>
+    <div class = 'row-fluid'>
+      <div class = 'span5 offset1'>
 
     <?php
     if(isset($_GET['id']) && !empty($_GET['id']))
@@ -26,17 +26,20 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
       $id = $_GET['id'];
       echo "<h3 class = 'text-center'>Displaying contact</h3>
           </div>
-        </div>";
+        </div>
+        <div class = 'row-fluid'>
+          <div class = 'span6 offset1'>";
       displayContact($id);
       if (getContact($id))
         $successDisplay = true;
+      
     }
     else
     {
       echo "<h1 class = 'text-center'>No Contact Info</h1>
           </div>
         </div>
-        <div class = 'row'>
+        <div class = 'row-fluid'>
           <div class = 'span6 offset1>
             <p class = 'alert><strong>Error!</strong> There is no contact that matches!</p>
           </div>
@@ -44,16 +47,20 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
     }
     ?>
     <br />
-    <div class = 'row'>
-      <div class = 'span6 offset1'>
+    
         <a href='main_menu.php' class='btn btn-primary'>Return to main menu</a>
-        
+        <?php
+        $friends = getmyFriends($_SESSION['current_user']['id']);
+        if (in_array($id, $friends)){
+          echo "<button type = 'button' onclick = 'removeFriend($id)' class = 'btn btn-warning'>Unfriend</button>";
+        }
+        ?>
       </div>
     </div>
     <script type='text/javascript'>
-      function deleteContact(pageid)
+      function removeFriend(friendid)
       {
-        var location = "delete_contact.php?id=" + pageid;
+        var location = "remove_friend.php?id=" + friendid;
         window.location = location;
       }
     </script>

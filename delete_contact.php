@@ -47,23 +47,42 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
           </div>
         </div>";
     }
-
-    
-
+    $contact = getContact($_GET['id']);
+    if(islastAdmin() == true && $contact['type']=='admin') //don't allow the last contact to be deleted
+    {
+      echo"
+      <br />
+      <div class = 'row'>
+        <div class = 'span8 offset1'>
+          <p class = 'text-error'>There is only one admin in the database.  The last admin cannot be deleted.</p>
+        </div>
+      </div>
+      <div class = 'row'>
+        <div class = 'span5 offset1'>
+          
+          <a href='main_menu.php' class='btn'>Return to main menu</a>
+        </div>
+      </div>";
+    }
+    else
+    {
+      $id = $_GET['id'];
+      echo"
+      <br />
+      <div class = 'row'>
+        <div class = 'span8 offset1'>
+          <p>Are you sure you want to delete this contact?</p>
+          <p class = 'text-error'>This cannot be undone!</p>
+        </div>
+      </div>
+      <div class = 'row'>
+        <div class = 'span5 offset1'>
+          <a href = 'delete_contact.php?delete=true&id={$_GET['id']}' class = 'btn btn-danger'>Delete</button> &nbsp;
+          <a href='main_menu.php' class='btn'>Return to main menu</a>
+        </div>
+      </div>";
+    }
     ?>
-    <br />
-    <div class = 'row'>
-      <div class = 'span8 offset1'>
-        <p>Are you sure you want to delete this contact?</p>
-        <p class = 'text-error'>This cannot be undone!</p>
-      </div>
-    </div>
-    <div class = 'row'>
-      <div class = 'span5 offset1'>
-        <a href = <?php echo "delete_contact.php?delete=true&id={$_GET['id']}";?> class = 'btn btn-danger'>Delete</button>
-        <a href='main_menu.php' class='btn'>Return to main menu</a>
-      </div>
-    </div>
     <script type="text/javascript">
       function delete(pageid)
       {

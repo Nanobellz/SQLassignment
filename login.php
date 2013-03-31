@@ -62,7 +62,7 @@ else if(isset($_GET['logout']))
       }
 
       .form-inline {
-        max-width: 300px;
+        max-width: 500px;
         padding: 19px 29px 29px;
         margin: 0 auto 20px;
         background-color: #fff;
@@ -106,15 +106,15 @@ else if(isset($_GET['logout']))
   else echo '
     <div class="container">
       <form class="form-inline" name = "login_form" action="login.php" method = "POST">
-        <h2 class="form-inline-heading">Log in to Contact Management</h2>';
+        <h2 class="form-inline-heading">Log in to FriendBook™</h2>';
         if(isset($err)){
         echo '<span style="color:red;">' . $err .'</span>';
         }
         echo '
-        <input type="text" class="input-small" placeholder="Email" name = "email" value = "admin">
-        <input type="password" class="input-small" placeholder="Password" name = "pass" value = "fnord">
-        <button class="btn btn-large btn-primary" type="submit">Sign in</button>
-        <a href="new_contact.php" class="btn btn-large pull-right">Sign up</a>
+        <input type="text" class="span3" placeholder="Email" name = "email" value = "rdecaire@georgebrown.ca">
+        <input type="password" class="span2" placeholder="Password" name = "pass" value = "fnord">
+        <br><button class="btn btn-large btn-primary" type="submit">Sign in</button>
+        <a href="new_contact.php" class="btn btn-large">Sign up</a>
       </form>
 
 

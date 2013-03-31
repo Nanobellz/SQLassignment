@@ -33,7 +33,7 @@ $result = getContacts();
     <br />
     <div class = 'row-fluid'>
       <div class = 'span6 offset1'>
-        <h3>Welcome "<?php echo "$user"?>" to Contact Manager</h3>
+        <h3>Welcome "<?php echo "$user"?>" to FriendBook™</h3>
       </div>
       <div class = 'span2'>
         <a href="login.php?logout=true" class = 'btn'>Log out</a>
@@ -78,7 +78,7 @@ $result = getContacts();
       echo "
         <div class = 'row-fluid'>
           <div class = 'offset1'>
-            <a href='confirm_friends.php' class = 'btn btn-info btn-large'>You have friend requests</a> %nbsp;
+            <a href='confirm_friends.php' class = 'btn btn-info btn-large'>You have friend requests</a> &nbsp;
           </div>
         </div>";
     }
