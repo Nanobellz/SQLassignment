@@ -1,8 +1,8 @@
 <?php
 //functions.php
 
-$db = new mysqli('localhost', 'admin', 'pass', 'assignment2');
-//$db = new mysqli('http://pteam13.gblearn.com:3306', 'pteam13_admin', '+inm]GV#3SJ*', 'pteam13_comp1230');
+//$db = new mysqli('localhost', 'admin', 'pass', 'assignment2');
+$db = new mysqli('localhost', 'pteam13_admin', '+inm]GV#3SJ*', 'pteam13_comp1230');
 /*function saveJson ($filename, $save_object)
 {
 	$json_string = json_encode($save_object);

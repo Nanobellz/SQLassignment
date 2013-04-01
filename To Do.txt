@@ -15,7 +15,7 @@ Add admin "show all users" function (done)
 
 Go through and add the "am I pending" script at the top of main_menu.php to every page that has a login redirect
 Make sure you can't delete all the admins (done)
-Change default on login page
+Change default on login page (done)
 Make button to remove friends (from View Contact screen)
 alphebetize functions in functions.php
 add admin checkbox to "create user" (done)
