@@ -29,7 +29,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
       }
       else
       {
-        echo "<h3 class = 'text-center'>Displaying contact #{$_GET['id']}</h3>
+        echo "<h3 class = 'text-center'>Delete a Contact</h3>
             </div>
           </div>";
         displayContact($_GET['id']);
@@ -77,7 +77,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true)
       </div>
       <div class = 'row'>
         <div class = 'span5 offset1'>
-          <a href = 'delete_contact.php?delete=true&id={$_GET['id']}' class = 'btn btn-danger'>Delete</button> &nbsp;
+          <a href = 'delete_contact.php?delete=true&id={$_GET['id']}' class = 'btn btn-danger'>Delete</button>
           <a href='main_menu.php' class='btn'>Return to main menu</a>
         </div>
       </div>";

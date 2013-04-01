@@ -19,3 +19,5 @@ Change default on login page (done)
 Make button to remove friends (from View Contact screen)
 alphebetize functions in functions.php
 add admin checkbox to "create user" (done)
+
+Change "your friends" in view_all.php

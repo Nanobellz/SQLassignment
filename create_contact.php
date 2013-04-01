@@ -54,11 +54,11 @@ if (isset($_POST)){
         }
         //print_r( $newcontact['type']);
         if (isset($_SESSION['current_user']['type']) && $_SESSION['current_user']['type'] == 'admin'){
-        $query = $db->prepare("INSERT INTO `assignment2`.`members` (`id`, `type`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`, `status`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $query = $db->prepare("INSERT INTO `members` (`id`, `type`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`, `status`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $newcontact['status'] = "active";
         $query->bind_param('sssssssssssssss', $newcontact['type'], $newcontact['title'], $newcontact['firstName'], $newcontact['lastName'], $newcontact['email'], $newcontact['password'], $newcontact['webaddr'], $newcontact['home_phone'], $newcontact['work_phone'], $newcontact['mobile_phone'], $newcontact['twitter'], $newcontact['facebook'], $newcontact['image'], $newcontact['comment'], $newcontact['status']);
         }else{   
-        $query = $db->prepare("INSERT INTO `assignment2`.`members` (`id`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $query = $db->prepare("INSERT INTO `members` (`id`, `title`, `firstName`, `lastName`, `email`, `password`, `webaddr`, `home_phone`, `work_phone`, `mobile_phone`, `twitter`, `facebook`, `image`, `comment`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $query->bind_param('sssssssssssss', $newcontact['title'], $newcontact['firstName'], $newcontact['lastName'], $newcontact['email'], $newcontact['password'], $newcontact['webaddr'], $newcontact['home_phone'], $newcontact['work_phone'], $newcontact['mobile_phone'], $newcontact['twitter'], $newcontact['facebook'], $newcontact['image'], $newcontact['comment']);
         }
         $query->execute();
