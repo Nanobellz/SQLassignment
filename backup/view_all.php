@@ -22,7 +22,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true || !isset($
     ?>
      <div class = "row-fluid">
       <div class = "span6 offset1">
-        <h3>View Users</h3>
+        <h3>Your Friends</h3>
         <table class = "table table-striped">
           <tr>
             
@@ -48,9 +48,6 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true || !isset($
                 else if ($contact['status'] == 'suspended'){
                   echo "<td><button type = 'button' onclick = 'adminSuspend($id, &#39;{$contact['status']}&#39;)' class = 'btn btn-success'>Unsuspend User</button></td>";
                 }
-                else if($contact['status'] == 'pending'){
-                    echo "<td><button type = 'button' onclick = 'userPending($id, &#39;{$contact['status']}&#39;)' class = 'btn btn-info'>Register User</button></td>";
-                }
                 else{
                   echo "<td><p class='text-info text-center'>&nbsp;<i class='icon-user'></i>&nbsp;Admin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td>";
                 }
@@ -72,10 +69,6 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true || !isset($
     </div>
     <script type="text/javascript">
       // Some functions to activate the buttons above
-      function userPending(id, allow){
-          var location = "user_pending.php?id=" + id + + "&allow=" + allow;
-          window.location = location;
-      }
       function viewContact(id)
       {
         var location = "view_contact.php?id=" + id;

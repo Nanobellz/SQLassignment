@@ -29,22 +29,41 @@ if (!isset ($_SESSION['edited']))
     if(isset($_GET['id']) && !empty($_GET['id']))
     {
       
+      
         
       $contact = getContact($_GET['id']);
-      foreach ($contact as $key => $value) 
-      {
-        if (!isset($_GET[$key])) 
-          $_GET[$key] = $contact[$key];
-      }
-      $_SESSION['editingId'] = $_GET['id'];
-      //echo $_SESSION['editingId'];
-      $validate = validateFields($_GET);
-      unset($_SESSION['editingId']);
-      
-      
-      echo "<h3 class = 'text-center'>Editing {$_GET['firstName']} {$_GET['lastName']}</h3>
+      if (isset($_GET['type']) && $_GET['type'] == 'member' && $contact['type'] == 'admin' && isLastAdmin()){
+        $_SESSION['edited'] = false;
+        echo"
+        <br />
+        <div class = 'row'>
+          <div class = 'span8 offset1'>
+            <p class = 'text-error'>There is only one admin in the database.  The last admin cannot be changed to a member.</p>
+          </div>
+        </div>
+        <div class = 'row'>
+          <div class = 'span5 offset1'>
+            
+            <a href='main_menu.php' class='btn'>Return to main menu</a>
           </div>
         </div>";
+      }
+      else
+      {
+        foreach ($contact as $key => $value) 
+        {
+          if (!isset($_GET[$key])) 
+            $_GET[$key] = $contact[$key];
+        }
+        $_SESSION['editingId'] = $_GET['id'];
+        //echo $_SESSION['editingId'];
+        $validate = validateFields($_GET);
+        unset($_SESSION['editingId']);
+        
+        
+        echo "<h3 class = 'text-center'>Editing {$_GET['firstName']} {$_GET['lastName']}</h3>
+            </div>
+          </div>";
         if (!empty($_GET["title"]) && !empty($_GET["firstName"]) && !empty($_GET["lastName"]) 
           && $validate['email']=='okay' && $validate['phone'] && $validate['work'] && $validate['mobile'] && $validate['image']
           && $_SESSION['edited'])
@@ -68,8 +87,9 @@ if (!isset ($_SESSION['edited']))
           }
           $contact_list[$_GET['id']] = $contact;
           
-
+          
           saveJson("contactlist.txt", $contact_list);*/
+          //print_r($_GET);
           displayContact($_GET['id']);
           //clearContact();
           echo"
@@ -89,6 +109,7 @@ if (!isset ($_SESSION['edited']))
           $_SESSION['edited'] = true;
           editContact($_GET, $validate);
         }
+      }
     }
     else
     {

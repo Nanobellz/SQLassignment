@@ -40,6 +40,7 @@ else if(isset($_GET['logout']))
   unset($_SESSION['logged_in']);
   unset($_SESSION['user_n']);
   unset($_SESSION['current_user']);
+  clearContact();
 }
 
 ?>

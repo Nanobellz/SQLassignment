@@ -33,7 +33,7 @@ $result = getContacts();
     <br />
     <div class = 'row-fluid'>
       <div class = 'span6 offset1'>
-        <h3>Welcome "<?php echo "$user"?>" to FriendBook™</h3>
+        <h3>Welcome "<?php echo "$user"?>" to FriendBook</h3>
       </div>
       <div class = 'span2'>
         <a href="login.php?logout=true" class = 'btn'>Log out</a>

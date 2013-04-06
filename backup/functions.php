@@ -1,8 +1,8 @@
 <?php
 //functions.php
 
-//$db = new mysqli('localhost', 'admin', 'pass', 'assignment2');
-$db = new mysqli('localhost', 'pteam13_admin', '+inm]GV#3SJ*', 'pteam13_comp1230');
+$db = new mysqli('localhost', 'admin', 'pass', 'assignment2');
+//$db = new mysqli('localhost', 'pteam13_admin', '+inm]GV#3SJ*', 'pteam13_comp1230');
 /*function saveJson ($filename, $save_object)
 {
 	$json_string = json_encode($save_object);
@@ -177,7 +177,9 @@ function amIPending($id){
 
 }
 
-
+function confirmUser($id){
+	
+}
 
 function suspend($id){
 	global $db;
@@ -188,16 +190,6 @@ function suspend($id){
 	$query->bind_param('i', $id);
 	$query->execute();
 	$query->close();
-}
-function allow_User($id){
-    global $db;
-    if($db->connect_errno > 0){
-        die('Unable to connect to database [' . $db->connect_error . ']');
-    }
-    $query = $db->prepare("UPDATE `members` SET `status` = 'active' WHERE `id` = ?");
-    $query->bind_param('i', $id);
-    $query->execute();
-    $query->close();
 }
 
 function unsuspend($id){
@@ -305,13 +297,9 @@ function modifyContact($contact){
 	if($db->connect_errno > 0){
 	    die('Unable to connect to database [' . $db->connect_error . ']');
 	}
-	if (isset($_SESSION['current_user']['type']) && $_SESSION['current_user']['type'] == 'admin'){
-		$query = $db->prepare("UPDATE `members` SET `title` = ?, `firstName`=?, `lastName`=?, `email`=?, `webaddr`=?, `home_phone`=?, `work_phone`=?, `mobile_phone`=?, `twitter`=?, `facebook`=?, `image`=?, `comment`=?, `type`=? WHERE `id` = ?");
-	    $query->bind_param('sssssssssssssi', $contact['title'], $contact['firstName'], $contact['lastName'], $contact['email'], $contact['webaddr'], $contact['home_phone'], $contact['work_phone'], $contact['mobile_phone'], $contact['twitter'], $contact['facebook'], $contact['image'], $contact['comment'], $contact['type'], $contact['id']);
-	}else{
-		$query = $db->prepare("UPDATE `members` SET `title` = ?, `firstName`=?, `lastName`=?, `email`=?, `webaddr`=?, `home_phone`=?, `work_phone`=?, `mobile_phone`=?, `twitter`=?, `facebook`=?, `image`=?, `comment`=? WHERE `id` = ?");
-	    $query->bind_param('ssssssssssssi', $contact['title'], $contact['firstName'], $contact['lastName'], $contact['email'], $contact['webaddr'], $contact['home_phone'], $contact['work_phone'], $contact['mobile_phone'], $contact['twitter'], $contact['facebook'], $contact['image'], $contact['comment'], $contact['id']);
-	}
+	$query = $db->prepare("UPDATE `members` SET `title` = ?, `firstName`=?, `lastName`=?, `email`=?, `webaddr`=?, `home_phone`=?, `work_phone`=?, `mobile_phone`=?, `twitter`=?, `facebook`=?, `image`=?, `comment`=? WHERE `id` = ?");
+    $query->bind_param('ssssssssssssi', $contact['title'], $contact['firstName'], $contact['lastName'], $contact['email'], $contact['webaddr'], $contact['home_phone'], $contact['work_phone'], $contact['mobile_phone'], $contact['twitter'], $contact['facebook'], $contact['image'], $contact['comment'], $contact['id']);
+
     $query->execute();
     $query->close();
 }
@@ -439,7 +427,7 @@ function displayContact ($id)
 	}
 	echo "
 	<div class = 'row-fluid'>
-		<div class = 'span3 offset1' >
+		<div class = 'span3'>
 			<img src = $image alt = 'Contact Image' class='img-rounded' height = '200' width = '200'>
 		</div>
 		<div class = 'span8'>
